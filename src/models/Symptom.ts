@@ -8,4 +8,4 @@ const symptomSchema = new mongoose.Schema({
 }, {timestamps: true}
 );
 
-export const Symptom = mongoose.model('Symptom', symptomSchema)
+export const Symptom = mongoose.model('Symptom', symptomSchema);
