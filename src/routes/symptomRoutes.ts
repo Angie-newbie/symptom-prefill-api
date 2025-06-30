@@ -1,17 +1,28 @@
-import express, { response } from "express"
+import express, { Request, Response } from "express"
 import { Symptom } from "../models/Symptom";
-import { request } from "http";
+
 
 const router = express.Router();
 
 
 // Get all symptoms
-router.get('/', async (_req, res) => {
+router.get('/', async (request, response) => {
   try {
     const symptoms = await Symptom.find();
-    res.status(200).json(symptoms);
+    response.status(200).json(symptoms);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching symptoms', error });
+    response.status(500).json({ message: 'Error fetching symptoms', error });
+  }
+});
+
+// Get one
+router.get('/:id', async (request, response)=>{
+    try {
+    const symptom = await Symptom.findById(request.params.id);
+    if (!symptom) return response.status(404).json({ message: 'Symptom not found' });
+    response.status(200).json(symptom);
+  } catch (error) {
+    response.status(400).json({ message: 'Invalid ID or error', error });
   }
 });
 
