@@ -29,10 +29,10 @@ router.get('/:id', async (request, response)=>{
 // Create  Users
 router.post('/create', async (request, response) => {
     try{
-        const {FirsttName ,lastName, dateOfBirth, phoneNumber} = request.body;
+        const {firstName ,lastName, dateOfBirth, phoneNumber} = request.body;
 
         // Create new user from data
-        const newUser = new User({FirsttName ,lastName, dateOfBirth, phoneNumber});
+        const newUser = new User({firstName ,lastName, dateOfBirth, phoneNumber});
 
         //Save
         const savedUser = await newUser.save();
@@ -46,10 +46,10 @@ router.post('/create', async (request, response) => {
 // UPDATE a user by ID
 router.put('/:id', async (request, response) => {
     try {
-        const { FirsttName ,lastName, dateOfBirth, phoneNumber} = request.body;
+        const { firstName ,lastName, dateOfBirth, phoneNumber} = request.body;
         const updated = await User.findByIdAndUpdate(
             request.params.id,
-            { FirsttName ,lastName, dateOfBirth, phoneNumber},
+            { firstName ,lastName, dateOfBirth, phoneNumber},
             { new: true, runValidators: true }
         );
 
