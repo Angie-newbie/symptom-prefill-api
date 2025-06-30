@@ -29,10 +29,10 @@ router.get('/user/:userId/:id', async (request, response)=>{
 // Create  Symptoms
 router.post('/user/:userId/create', async (request, response) => {
     try{
-        const {userId, name, duration, severity, notes} = request.body;
+        const {name, duration, severity, notes} = request.body;
 
         // Create new symptom from data
-        const newSymptom = new Symptom({name, duration, severity, notes});
+        const newSymptom = new Symptom({userId:request.params.userId, name, duration, severity, notes});
 
         //Save
         const savedSymptom = await newSymptom.save();
@@ -48,7 +48,7 @@ router.put('/user/:userId/:id', async (request, response) => {
     try {
         const { name, duration, severity, notes } = request.body;
         const updated = await Symptom.findByIdAndUpdate(
-            request.params.id,
+            { _id: request.params.id, userId: request.params.userId },
             { name, duration, severity, notes },
             { new: true, runValidators: true }
         );
@@ -64,7 +64,7 @@ router.put('/user/:userId/:id', async (request, response) => {
 // DELETE a symptom by ID
 router.delete('/user/:userId/:id', async (request, response) => {
     try {
-        const deleted = await Symptom.findByIdAndDelete(request.params.id);
+        const deleted = await Symptom.findByIdAndDelete( _id: req.params.id, userId: req.params.userId );
 
         if (!deleted) return response.status(404).json({ message: 'Symptom not found' });
         response.status(200).json({ message: 'Symptom deleted', id: request.params.id });
