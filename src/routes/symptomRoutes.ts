@@ -4,8 +4,19 @@ import { request } from "http";
 
 const router = express.Router();
 
+
+// Get all symptoms
+router.get('/', async (_req, res) => {
+  try {
+    const symptoms = await Symptom.find();
+    res.status(200).json(symptoms);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching symptoms', error });
+  }
+});
+
 // Create  Symptoms
-router.post('/', async (request, response) => {
+router.post('/Create', async (request, response) => {
     try{
         const {name, duration, severity, notes} = request.body;
 
