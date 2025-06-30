@@ -64,7 +64,7 @@ router.put('/user/:userId/:id', async (request, response) => {
 // DELETE a symptom by ID
 router.delete('/user/:userId/:id', async (request, response) => {
     try {
-        const deleted = await Symptom.findByIdAndDelete( _id: req.params.id, userId: req.params.userId );
+        const deleted = await Symptom.findByIdAndDelete( {_id: request.params.id, userId: request.params.userId});
 
         if (!deleted) return response.status(404).json({ message: 'Symptom not found' });
         response.status(200).json({ message: 'Symptom deleted', id: request.params.id });
