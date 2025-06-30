@@ -7,23 +7,23 @@ const router = express.Router();
 
 // Get all symptoms
 router.get('/', async (request, response) => {
-  try {
-    const symptoms = await Symptom.find();
-    response.status(200).json(symptoms);
-  } catch (error) {
-    response.status(500).json({ message: 'Error fetching symptoms', error });
-  }
+    try {
+        const symptoms = await Symptom.find();
+        response.status(200).json(symptoms);
+    } catch (error) {
+        response.status(500).json({ message: 'Error fetching symptoms', error });
+    }
 });
 
 // Get one
 router.get('/:id', async (request, response)=>{
     try {
-    const symptom = await Symptom.findById(request.params.id);
+        const symptom = await Symptom.findById(request.params.id);
     if (!symptom) return response.status(404).json({ message: 'Symptom not found' });
-    response.status(200).json(symptom);
-  } catch (error) {
-    response.status(400).json({ message: 'Invalid ID or error', error });
-  }
+        response.status(200).json(symptom);
+    } catch (error) {
+        response.status(400).json({ message: 'Invalid ID or error', error });
+    }
 });
 
 // Create  Symptoms
@@ -40,6 +40,37 @@ router.post('/Create', async (request, response) => {
         response.status(401).json(savedSymptom);
     } catch (error) {
         response.status(400).json({message: 'Fail to save syptom', error});
+    }
+});
+
+// UPDATE a symptom by ID
+router.put('/:id', async (request, response) => {
+    try {
+        const { name, duration, severity, notes } = request.body;
+        const updated = await Symptom.findByIdAndUpdate(
+            request.params.id,
+            { name, duration, severity, notes },
+            { new: true, runValidators: true }
+        );
+
+        if (!updated) return response.status(404).json({ message: 'Symptom not found' });
+        response.status(200).json(updated);
+
+    } catch (error) {
+        response.status(400).json({ message: 'Failed to update', error });
+  }
+});
+
+// DELETE a symptom by ID
+router.delete('/:id', async (request, response) => {
+    try {
+        const deleted = await Symptom.findByIdAndDelete(request.params.id);
+
+        if (!deleted) return response.status(404).json({ message: 'Symptom not found' });
+        response.status(200).json({ message: 'Symptom deleted', id: request.params.id });
+
+    } catch (error) {
+        response.status(400).json({ message: 'Failed to delete', error });
     }
 });
 
