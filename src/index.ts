@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import symptomRoutes from './routes/symptomRoutes'
+import userRoutes from './routes/userRoutes'
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,7 +16,8 @@ mongoose.connect(MONGO_URI)
   .catch(err => console.error('MongoDB connection error:', err));
 
 
-app.use('/api/symptoms', symptomRoutes);
+app.use('/symptomsform', symptomRoutes);
+app.use('/user', userRoutes);
 
 app.get('/', (req,res) => {
     res.send('the form in running');

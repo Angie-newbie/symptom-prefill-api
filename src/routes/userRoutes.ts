@@ -27,17 +27,17 @@ router.get('/:id', async (request, response)=>{
 });
 
 // Create  Users
-router.post('/Create', async (request, response) => {
+router.post('/create', async (request, response) => {
     try{
-        const {name, duration, severity, notes} = request.body;
+        const {FirsttName ,lastName, dateOfBirth, phoneNumber} = request.body;
 
         // Create new user from data
-        const newUser = new User({name, duration, severity, notes});
+        const newUser = new User({FirsttName ,lastName, dateOfBirth, phoneNumber});
 
         //Save
         const savedUser = await newUser.save();
 
-        response.status(401).json(savedUser);
+        response.status(201).json(savedUser);
     } catch (error) {
         response.status(400).json({message: 'Fail to save user', error});
     }
@@ -46,10 +46,10 @@ router.post('/Create', async (request, response) => {
 // UPDATE a user by ID
 router.put('/:id', async (request, response) => {
     try {
-        const { name, duration, severity, notes } = request.body;
+        const { FirsttName ,lastName, dateOfBirth, phoneNumber} = request.body;
         const updated = await User.findByIdAndUpdate(
             request.params.id,
-            { name, duration, severity, notes },
+            { FirsttName ,lastName, dateOfBirth, phoneNumber},
             { new: true, runValidators: true }
         );
 

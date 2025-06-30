@@ -5,8 +5,8 @@ import { Symptom } from "../models/Symptom";
 const router = express.Router();
 
 
-// Get all symptoms
-router.get('/', async (request, response) => {
+// Get all symptoms (for a user)
+router.get('/user/:userId', async (request, response) => {
     try {
         const symptoms = await Symptom.find();
         response.status(200).json(symptoms);
@@ -16,7 +16,7 @@ router.get('/', async (request, response) => {
 });
 
 // Get one
-router.get('/:id', async (request, response)=>{
+router.get('/user/:userId/:id', async (request, response)=>{
     try {
         const symptom = await Symptom.findById(request.params.id);
     if (!symptom) return response.status(404).json({ message: 'Symptom not found' });
@@ -27,9 +27,9 @@ router.get('/:id', async (request, response)=>{
 });
 
 // Create  Symptoms
-router.post('/Create', async (request, response) => {
+router.post('/user/:userId/create', async (request, response) => {
     try{
-        const {name, duration, severity, notes} = request.body;
+        const {userId, name, duration, severity, notes} = request.body;
 
         // Create new symptom from data
         const newSymptom = new Symptom({name, duration, severity, notes});
@@ -37,14 +37,14 @@ router.post('/Create', async (request, response) => {
         //Save
         const savedSymptom = await newSymptom.save();
 
-        response.status(401).json(savedSymptom);
+        response.status(201).json(savedSymptom);
     } catch (error) {
         response.status(400).json({message: 'Fail to save syptom', error});
     }
 });
 
 // UPDATE a symptom by ID
-router.put('/:id', async (request, response) => {
+router.put('/user/:userId/:id', async (request, response) => {
     try {
         const { name, duration, severity, notes } = request.body;
         const updated = await Symptom.findByIdAndUpdate(
@@ -62,7 +62,7 @@ router.put('/:id', async (request, response) => {
 });
 
 // DELETE a symptom by ID
-router.delete('/:id', async (request, response) => {
+router.delete('/user/:userId/:id', async (request, response) => {
     try {
         const deleted = await Symptom.findByIdAndDelete(request.params.id);
 
