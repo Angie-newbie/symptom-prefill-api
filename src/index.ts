@@ -3,12 +3,15 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import symptomRoutes from './routes/symptomRoutes'
 import userRoutes from './routes/userRoutes'
+import cors from 'cors';
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/symptoms';
 
 app.use(express.json());
+app.use(cors());
 
 // Connect to MongoDB
 mongoose.connect(MONGO_URI)
