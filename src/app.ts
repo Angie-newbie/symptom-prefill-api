@@ -15,8 +15,8 @@ mongoose.connect(MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-app.use('/symptomsform', symptomRoutes);
-app.use('/user', userRoutes);
+app.use('/symptoms', symptomRoutes);
+app.use('/users', userRoutes);
 
 app.get('/', (req, res) => {
   res.send('The form is running');

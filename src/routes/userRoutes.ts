@@ -2,12 +2,10 @@ import express, { Request, Response, Router} from "express"
 import bcrypt from 'bcrypt';
 import { User } from "../models/User";
 
-
 const router = express.Router();
 
-
 // Get all users
-router.get('/users', async (request, response) => {
+router.get('/', async (request, response) => {
     try {
         const users = await User.find();
         response.status(200).json(users);
@@ -17,7 +15,7 @@ router.get('/users', async (request, response) => {
 });
 
 // Get one
-router.get('/users/:id', async (request, response)=>{
+router.get('/:id', async (request, response)=>{
     try {
         const user = await User.findById(request.params.id);
     if (!user) return response.status(404).json({ message: 'User not found' });
@@ -28,7 +26,7 @@ router.get('/users/:id', async (request, response)=>{
 });
 
 // Create  Users
-router.post('/users/register', async (request, response) => {
+router.post('/register', async (request, response) => {
     try{
         const {firstName ,lastName, dateOfBirth, phoneNumber, email, password} = request.body;
 
@@ -49,7 +47,7 @@ router.post('/users/register', async (request, response) => {
 });
 
 // UPDATE a user by ID
-router.put('/users/:id', async (request, response) => {
+router.put('/:id', async (request, response) => {
     try {
         const { firstName ,lastName, dateOfBirth, phoneNumber} = request.body;
         const updated = await User.findByIdAndUpdate(
@@ -67,7 +65,7 @@ router.put('/users/:id', async (request, response) => {
 });
 
 // DELETE a user by ID
-router.delete('/users/:id', async (request, response) => {
+router.delete('/:id', async (request, response) => {
     try {
         const deleted = await User.findByIdAndDelete(request.params.id);
 
