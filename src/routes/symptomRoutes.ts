@@ -11,7 +11,7 @@ interface UserIdParams  {
 
 
 // Get all symptoms (for a user)
-router.get('/user/:userId/symptoms', async (req, res) => {
+router.get('/:userId/symptoms', async (req, res) => {
     try {
         const symptoms = await Symptom.find();
         res.status(200).json(symptoms);
@@ -21,7 +21,7 @@ router.get('/user/:userId/symptoms', async (req, res) => {
 });
 
 // Get one
-router.get('/user/:userId/symptoms/:id', async (req: Request<UserIdParams>, res: Response) => {
+router.get('/:userId/symptoms/:id', async (req, res): Promise<any>  => {
     try {
         const symptom = await Symptom.findById(req.params.id);
         if (!symptom) return res.status(404).json({ message: 'Symptom not found' });
@@ -33,7 +33,7 @@ router.get('/user/:userId/symptoms/:id', async (req: Request<UserIdParams>, res:
 );
 
 // Create  Symptoms
-router.post('/user/:userId/symptoms/create', async (req, res) => {
+router.post('/:userId/symptoms/create', async (req, res) => {
     try{
         const {name, duration, severity, notes} = req.body;
 
@@ -50,7 +50,7 @@ router.post('/user/:userId/symptoms/create', async (req, res) => {
 });
 
 // UPDATE a symptom by ID
-router.put('/user/:userId/symptoms/:id', async (req, res) => {
+router.put('/:userId/symptoms/:id', async (req, res): Promise<any> => {
     try {
         const { name, duration, severity, notes } = req.body;
         const updated = await Symptom.findOneAndUpdate(
@@ -68,7 +68,7 @@ router.put('/user/:userId/symptoms/:id', async (req, res) => {
 });
 
 // DELETE a symptom by ID
-router.delete('/user/:userId/symptoms/:id', async (req, res) => {
+router.delete('/:userId/symptoms/:id', async (req, res): Promise<any> => {
     try {
         const deleted = await Symptom.findOneAndDelete( {_id: req.params.id, userId: req.params.userId});
 
