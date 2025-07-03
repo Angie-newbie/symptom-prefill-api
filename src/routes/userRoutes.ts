@@ -2,6 +2,7 @@ import express, { Request, Response, Router} from "express"
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { User } from "../models/User";
+import {authenticate} from "../middleware/auth";
 
 const router = express.Router();
 
@@ -16,7 +17,7 @@ router.get('/', async (request, response) => {
 });
 
 // Get one
-router.get('/:id', authenticate, async (request, response)=>{
+router.get('/:id', async (request, response): Promise<any>=>{
     try {
         const user = await User.findById(request.params.id);
     if (!user) return response.status(404).json({ message: 'User not found' });
@@ -27,7 +28,7 @@ router.get('/:id', authenticate, async (request, response)=>{
 });
 
 // Create  Users
-router.post('/register', async (request, response) => {
+router.post('/register', async (request, response): Promise<any> => {
     try{
         const {firstName ,lastName, dateOfBirth, phoneNumber, email, password} = request.body;
 
@@ -39,7 +40,7 @@ router.post('/register', async (request, response) => {
         const newUser = new User({firstName ,lastName, dateOfBirth, phoneNumber, email, password });
 
         //Save
-        const savedUser = await newUser.save();
+        await newUser.save();
 
         response.status(201).json({message: 'User registered successfully', userId: newUser._id});
     } catch (error) {
@@ -47,13 +48,17 @@ router.post('/register', async (request, response) => {
     }
 });
 
-router.post('/login', async (request, response) => {
+router.post('/login', async (request, response): Promise<any> => {
     const { email, password } = request.body;
 
     try {
         // Check if user exists
         const user = await User.findOne({ email });
         if (!user) return response.status(404).json({ message: 'User not found' });
+
+        //Log both values
+        console.log("Login input password:", password);
+        console.log("Stored user.password:", user.password);
 
         // Compare password
         const isMatch = await bcrypt.compare(password, user.password);
@@ -68,12 +73,13 @@ router.post('/login', async (request, response) => {
 
         response.status(200).json({ message: 'Login successful', token });
     } catch (error) {
+        console.error('Login error:', error)
         response.status(500).json({ message: 'Login failed', error });
   }
 });
 
 // UPDATE a user by ID
-router.put('/:id', async (request, response) => {
+router.put('/:id', async (request, response): Promise<any> => {
     try {
         const { firstName ,lastName, dateOfBirth, phoneNumber} = request.body;
         const updated = await User.findByIdAndUpdate(
@@ -91,7 +97,7 @@ router.put('/:id', async (request, response) => {
 });
 
 // DELETE a user by ID
-router.delete('/:id', async (request, response) => {
+router.delete('/:id', async (request, response): Promise<any> => {
     try {
         const deleted = await User.findByIdAndDelete(request.params.id);
 
