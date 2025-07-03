@@ -1,4 +1,5 @@
-import express, { Request, Response } from "express"
+import express, { Request, Response, Router} from "express"
+import bcrypt from 'bcrypt';
 import { User } from "../models/User";
 
 
@@ -27,17 +28,21 @@ router.get('/:id', async (request, response)=>{
 });
 
 // Create  Users
-router.post('/create', async (request, response) => {
+router.post('/register', async (request, response) => {
     try{
-        const {firstName ,lastName, dateOfBirth, phoneNumber} = request.body;
+        const {firstName ,lastName, dateOfBirth, phoneNumber, email, password} = request.body;
+
+        // if exsited
+        const userExsited = await User.findOne({email});
+        if (userExsited) return response.status(409).json({message:'Email already registered'})
 
         // Create new user from data
-        const newUser = new User({firstName ,lastName, dateOfBirth, phoneNumber});
+        const newUser = new User({firstName ,lastName, dateOfBirth, phoneNumber, email, password });
 
         //Save
         const savedUser = await newUser.save();
 
-        response.status(201).json(savedUser);
+        response.status(201).json({message: 'User registered successfully', userId: newUser._id});
     } catch (error) {
         response.status(400).json({message: 'Fail to save user', error});
     }
