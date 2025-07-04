@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import symptomRoutes from './routes/symptomRoutes';
 import userRoutes from './routes/userRoutes';
+import medicineRoutes from './routes/medicineRoutes';
 
 dotenv.config();
 
@@ -17,6 +18,8 @@ mongoose.connect(MONGO_URI)
 
 app.use('/symptoms', symptomRoutes);
 app.use('/users', userRoutes);
+app.use('/users', medicineRoutes);
+
 
 app.get('/', (req, res) => {
   res.send('The form is running');

@@ -1,3 +1,10 @@
+/** 
+Logics:
+Handles CRUD operations for medicine records submitted by users (patients) and later updated by doctors.
+ - Patients fill in their current medications before meeting a doctor (via POST).
+ - Doctors can later review and update these entries after the consultation (via PUT).
+**/
+
 import express, { Request, Response } from "express";
 import { Medicine } from "../models/Medicine";
 
@@ -18,22 +25,22 @@ router.get('/:userId/medicines', async (request, response): Promise<any> => {
 router.get('/:userId/medicines/:id', async (request, response) : Promise<any> => {
     try {
         const medicine = await Medicine.findOne({
-        _id: request.params.id,
-        userId: request.params.userId,
+            _id: request.params.id,
+            userId: request.params.userId,
         });
 
         if (!medicine) {
             return response.status(404).json({ message: 'Medicine not found' });
         }
 
-        response.status(200).json(medicine);
+        return response.status(200).json(medicine);
     } catch (error) {
-        response.status(400).json({ message: 'Invalid ID or error', error });
+        return response.status(400).json({ message: 'Invalid ID or error', error });
     }
 });
 
 // POST: Create medicine (submitted by patient or doctor)
-router.post('/:userId/medicines', async (request, response) => {
+router.post('/:userId/medicines', async (request, response) : Promise<any> => {
     try {
         const {
             name,
@@ -45,6 +52,12 @@ router.post('/:userId/medicines', async (request, response) => {
             // default to patient
             submittedBy = 'patient',
         } = request.body;
+
+        
+        // Basic validation
+        if (!name || !dosage || !frequency) {
+        return response.status(400).json({ message: 'Name, dosage, and frequency are required' });
+        }
 
         const newMedicine = new Medicine({
             userId: request.params.userId,
@@ -59,9 +72,9 @@ router.post('/:userId/medicines', async (request, response) => {
         });
 
         const saved = await newMedicine.save();
-        response.status(201).json(saved);
+        return response.status(201).json(saved);
     } catch (error) {
-        response.status(400).json({ message: 'Failed to save medicine', error });
+        return response.status(400).json({ message: 'Failed to save medicine', error });
     }
 });
 
