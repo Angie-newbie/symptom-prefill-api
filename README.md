@@ -72,6 +72,16 @@ npm run dev
 
 # 📘 API Overview
 
+## Authentication & Headers
+
+- Most endpoints require a valid **JWT token** for authentication.
+- Include the token in your request headers as:
+```
+Authorization: Bearer <your_jwt_token>
+```
+- The `/users/register` and `/users/login` endpoints are public and do **not** require this header.
+- Requests without a valid token will receive a `401 Unauthorized` response.
+
 ## API Endpoints
 
 ### Auth
