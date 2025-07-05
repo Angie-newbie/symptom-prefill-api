@@ -3,11 +3,12 @@ import { User } from '../models/User';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { handleError } from '../helpers/errorHelper'; 
+import { validateFields } from '../helpers/validationHelper';
 
 const router = express.Router();
 
 // Create  Users
-router.post('/register', async (request, response): Promise<any> => {
+router.post('/register', validateFields(['firstName', 'lastName', 'dateOfBirth', 'phoneNumber', 'email', 'password']), async (request, response): Promise<any> => {
     const {firstName ,lastName, dateOfBirth, phoneNumber, email, password} = request.body;
     try{
         // if exsited
@@ -26,7 +27,7 @@ router.post('/register', async (request, response): Promise<any> => {
     }
 });
 
-router.post('/login', async (request, response): Promise<any> => {
+router.post('/login', validateFields(['email', 'password']), async (request, response): Promise<any> => {
     const { email, password } = request.body;
 
     try {

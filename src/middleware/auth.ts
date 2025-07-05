@@ -1,23 +1,19 @@
-import jwt,  { JwtPayload } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 
-declare module 'express-serve-static-core' {
-  interface Request {
-    user?: string | JwtPayload;
-  }
-}
-
-export const authenticate = (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader) return res.status(401).json({ message: 'No token provided' });
-
-  const token = authHeader.split(' ')[1];
+export const authenticate = (req: Request, res: Response, next: NextFunction): void => {
   try {
+    const token = req.header('Authorization')?.split(' ')[1];
+
+    if (!token) {
+      res.status(401).json({ message: 'No token provided' });
+      return;
+    }
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'dev-secret');
-    req.user = decoded;
+    (req as any).user = decoded;
     next();
-  } catch (err) {
-    return res.status(401).json({ message: 'Invalid token' });
+  } catch (error) {
+    res.status(401).json({ message: 'Invalid token' });
   }
 };

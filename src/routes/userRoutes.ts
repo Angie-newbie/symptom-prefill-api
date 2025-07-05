@@ -3,11 +3,13 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { User } from "../models/User";
 import { handleError } from '../helpers/errorHelper'; 
+import { validateFields } from '../helpers/validationHelper';
+import { authenticate } from '../middleware/auth';
 
 const router = express.Router();
 
 // Get all users
-router.get('/', async (request, response) => {
+router.get('/', authenticate, async (request, response) => {
     try {
         const users = await User.find();
         response.status(200).json(users);
@@ -17,7 +19,7 @@ router.get('/', async (request, response) => {
 });
 
 // Get one
-router.get('/:id', async (request, response): Promise<any>=>{
+router.get('/:id', authenticate, async (request, response): Promise<any>=>{
     const { id } = request.params;
     try {
         const user = await User.findById(id);
@@ -29,7 +31,7 @@ router.get('/:id', async (request, response): Promise<any>=>{
 });
 
 // UPDATE a user by ID
-router.put('/:id', async (request, response): Promise<any> => {
+router.put('/:id', authenticate, async (request, response): Promise<any> => {
     const { id } = request.params;
     const { firstName ,lastName, dateOfBirth, phoneNumber} = request.body;
     try {
@@ -48,7 +50,7 @@ router.put('/:id', async (request, response): Promise<any> => {
 });
 
 // DELETE a user by ID
-router.delete('/:id', async (request, response): Promise<any> => {
+router.delete('/:id', authenticate, async (request, response): Promise<any> => {
     const { id } = request.params;
     try {
         const deleted = await User.findByIdAndDelete(id);

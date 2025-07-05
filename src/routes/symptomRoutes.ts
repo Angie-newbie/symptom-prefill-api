@@ -1,6 +1,7 @@
 import express,  { Request, Response } from "express"
 import { Symptom } from "../models/Symptom";
 import { handleError } from '../helpers/errorHelper'; 
+import { checkRequiredFields } from '../helpers/validationHelper';
 
 
 const router = express.Router();
@@ -33,6 +34,17 @@ router.get('/:userId/symptoms/:id', async (request, response): Promise<any>  => 
 router.post('/:userId/symptoms/create', async (request, response) : Promise<any> => {
     const { userId } = request.params;
     const {name, duration, severity, notes} = request.body;
+
+    // for validation
+    const requiredFields = ['name', 'duration', 'severity'];
+    const missingFields = checkRequiredFields(requiredFields, request.body);
+
+    if (missingFields.length > 0) {
+        return response.status(400).json({
+            message: `Missing required field(s): ${missingFields.join(', ')}`,
+        });
+    }
+
     try{
         // Validate required fields
         if (!name || !duration || !severity) {
