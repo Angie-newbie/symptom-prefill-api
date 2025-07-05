@@ -10,11 +10,12 @@ import mongoose from "mongoose";
 import { Medicine } from "../models/Medicine";
 import { handleError } from '../helpers/errorHelper'; 
 import { validateFields } from '../helpers/validationHelper';
+import { authenticate } from '../middleware/auth';
 
 const router = express.Router({ mergeParams: true });
 
 // GET all medicines for a user
-router.get('/', async (request: Request<{ userId: string }>, response: Response): Promise<any> => {
+router.get('/', authenticate, async (request: Request<{ userId: string }>, response: Response): Promise<any> => {
     const { userId } = request.params;
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -31,7 +32,7 @@ router.get('/', async (request: Request<{ userId: string }>, response: Response)
 
 
 // GET one medicine by ID for a user
-router.get('/:id', async (request: Request<{ userId: string, id: string}>, response: Response) : Promise<any> => {
+router.get('/:id', authenticate, async (request: Request<{ userId: string, id: string}>, response: Response) : Promise<any> => {
     const { userId, id } = request.params;
 
     if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(id)) {
@@ -52,7 +53,7 @@ router.get('/:id', async (request: Request<{ userId: string, id: string}>, respo
 });
 
 // POST: Create medicine (submitted by patient or doctor)
-router.post('/create', validateFields(['name', 'dosage', 'frequency']), async (request, response) : Promise<any> => {
+router.post('/create', authenticate, validateFields(['name', 'dosage', 'frequency']), async (request, response) : Promise<any> => {
     const { userId } = request.params;
     const {
         name,
@@ -89,7 +90,7 @@ router.post('/create', validateFields(['name', 'dosage', 'frequency']), async (r
 });
 
 // PUT: Update existing medicine (e.g., by doctor after appointment)
-router.put('/:id', async (request: Request<{ userId: string, id: string}>, response: Response): Promise<any> => {
+router.put('/:id', authenticate, async (request: Request<{ userId: string, id: string}>, response: Response): Promise<any> => {
     const { userId, id } = request.params;
     const {
         name,
@@ -123,7 +124,7 @@ router.put('/:id', async (request: Request<{ userId: string, id: string}>, respo
 });
 
 // DELETE a medicine
-router.delete('/:id', async (request: Request<{ userId: string, id: string}>, response: Response) : Promise<any> => {
+router.delete('/:id', authenticate, async (request: Request<{ userId: string, id: string}>, response: Response) : Promise<any> => {
     const { userId, id } = request.params;
     try {
     const deleted = await Medicine.findOneAndDelete({
