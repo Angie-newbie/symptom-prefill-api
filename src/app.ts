@@ -20,7 +20,7 @@ mongoose.connect(MONGO_URI)
 app.use('/auth', authRoutes);
 app.use('/symptoms', symptomRoutes);
 app.use('/users', userRoutes);
-app.use('/users/:id/medicines', medicineRoutes);
+app.use('/users/:userId/medicines', medicineRoutes);
 
 
 app.get('/', (req, res) => {
