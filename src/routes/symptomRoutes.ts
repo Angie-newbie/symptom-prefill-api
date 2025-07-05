@@ -3,12 +3,13 @@ import { Symptom } from "../models/Symptom";
 import mongoose from 'mongoose';
 import { handleError } from '../helpers/errorHelper'; 
 import { validateFields } from '../helpers/validationHelper';
+import { authenticate } from '../middleware/auth';
 
 
 const router = express.Router();
 
 // Get all symptoms (for a user)
-router.get('/:userId/symptoms', async (request, response) => {
+router.get('/:userId/symptoms', authenticate, async (request, response) => {
     try {
         const { userId } = request.params;
         const symptoms = await Symptom.find({ userId });
@@ -19,7 +20,7 @@ router.get('/:userId/symptoms', async (request, response) => {
 });
 
 // Get single symptoms for a user
-router.get('/:userId/symptoms/:id', async (request, response): Promise<any>  => {
+router.get('/:userId/symptoms/:id', authenticate, async (request, response): Promise<any>  => {
     const { userId, id } = request.params;
     try {
         const symptom = await Symptom.findById({_id: id, userId});
@@ -32,7 +33,7 @@ router.get('/:userId/symptoms/:id', async (request, response): Promise<any>  => 
 );
 
 // Create  Symptoms
-router.post('/:userId/symptoms/create', validateFields(['name', 'duration', 'severity']), async (request, response) : Promise<any> => {
+router.post('/:userId/symptoms/create', authenticate, validateFields(['name', 'duration', 'severity']), async (request, response) : Promise<any> => {
     const { userId } = request.params;
     const {name, duration, severity, notes} = request.body;
 
@@ -55,7 +56,7 @@ router.post('/:userId/symptoms/create', validateFields(['name', 'duration', 'sev
 });
 
 // UPDATE a symptom by ID
-router.put('/:userId/symptoms/:id', async (request, response): Promise<any> => {
+router.put('/:userId/symptoms/:id', authenticate, async (request, response): Promise<any> => {
     const { userId, id } = request.params;
     const updateFields = request.body;
 
@@ -84,7 +85,7 @@ router.put('/:userId/symptoms/:id', async (request, response): Promise<any> => {
 
 
 // DELETE a symptom by ID
-router.delete('/:userId/symptoms/:id', async (request, response): Promise<any> => {
+router.delete('/:userId/symptoms/:id', authenticate, async (request, response): Promise<any> => {
     const { userId, id } = request.params;
     try {
         const deleted = await Symptom.findOneAndDelete( {_id: id, userId});

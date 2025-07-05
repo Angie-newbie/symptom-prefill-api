@@ -3,7 +3,6 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { User } from "../models/User";
 import { handleError } from '../helpers/errorHelper'; 
-import { validateFields } from '../helpers/validationHelper';
 import { authenticate } from '../middleware/auth';
 
 const router = express.Router();
