@@ -1,13 +1,9 @@
 import express,  { Request, Response } from "express"
 import { Symptom } from "../models/Symptom";
+import { handleError } from '../helpers/errorHelper'; 
 
 
 const router = express.Router();
-
-// Handle errors with consistent formatting
-const handleError = (response: Response, statusCode: number, message: string, error: any) => {
-  response.status(statusCode).json({ message, error });
-};
 
 // Get all symptoms (for a user)
 router.get('/:userId/symptoms', async (request, response) => {

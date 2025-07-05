@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import symptomRoutes from './routes/symptomRoutes';
 import userRoutes from './routes/userRoutes';
 import medicineRoutes from './routes/medicineRoutes';
+import authRoutes from './routes/authRoutes';
 
 dotenv.config();
 
@@ -16,9 +17,10 @@ mongoose.connect(MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
+app.use('/auth', authRoutes);
 app.use('/symptoms', symptomRoutes);
 app.use('/users', userRoutes);
-app.use('/users', medicineRoutes);
+app.use('/users/:id/medicines', medicineRoutes);
 
 
 app.get('/', (req, res) => {

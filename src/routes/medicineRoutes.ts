@@ -7,11 +7,12 @@ Handles CRUD operations for medicine records submitted by users (patients) and l
 
 import express, { Request, Response } from "express";
 import { Medicine } from "../models/Medicine";
+import { handleError } from '../helpers/errorHelper'; 
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 // GET all medicines for a user
-router.get('/:userId/medicines', async (request, response): Promise<any> => {
+router.get('/', async (request, response): Promise<any> => {
     try {
         const medicines = await Medicine.find({ userId: request.params.userId });
         response.status(200).json(medicines);
@@ -22,7 +23,7 @@ router.get('/:userId/medicines', async (request, response): Promise<any> => {
 
 
 // GET one medicine by ID for a user
-router.get('/:userId/medicines/:id', async (request, response) : Promise<any> => {
+router.get('/:id', async (request, response) : Promise<any> => {
     try {
         const medicine = await Medicine.findOne({
             _id: request.params.id,
@@ -40,7 +41,7 @@ router.get('/:userId/medicines/:id', async (request, response) : Promise<any> =>
 });
 
 // POST: Create medicine (submitted by patient or doctor)
-router.post('/:userId/medicines', async (request, response) : Promise<any> => {
+router.post('/create', async (request, response) : Promise<any> => {
     try {
         const {
             name,
@@ -79,7 +80,7 @@ router.post('/:userId/medicines', async (request, response) : Promise<any> => {
 });
 
 // PUT: Update existing medicine (e.g., by doctor after appointment)
-router.put('/:userId/medicines/:id', async (request, response) : Promise<any> => {
+router.put('/:id', async (request, response) : Promise<any> => {
     try {
         const {
             name,
@@ -115,7 +116,7 @@ router.put('/:userId/medicines/:id', async (request, response) : Promise<any> =>
 });
 
 // DELETE a medicine
-router.delete('/:userId/medicines/:id', async (request, response) : Promise<any> => {
+router.delete('/:id', async (request, response) : Promise<any> => {
   try {
     const deleted = await Medicine.findOneAndDelete({
         _id: request.params.id,
