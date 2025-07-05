@@ -1,7 +1,8 @@
 import express,  { Request, Response } from "express"
 import { Symptom } from "../models/Symptom";
+import mongoose from 'mongoose';
 import { handleError } from '../helpers/errorHelper'; 
-import { checkRequiredFields } from '../helpers/validationHelper';
+import { validateFields } from '../helpers/validationHelper';
 
 
 const router = express.Router();
@@ -31,19 +32,9 @@ router.get('/:userId/symptoms/:id', async (request, response): Promise<any>  => 
 );
 
 // Create  Symptoms
-router.post('/:userId/symptoms/create', async (request, response) : Promise<any> => {
+router.post('/:userId/symptoms/create', validateFields(['name', 'duration', 'severity']), async (request, response) : Promise<any> => {
     const { userId } = request.params;
     const {name, duration, severity, notes} = request.body;
-
-    // for validation
-    const requiredFields = ['name', 'duration', 'severity'];
-    const missingFields = checkRequiredFields(requiredFields, request.body);
-
-    if (missingFields.length > 0) {
-        return response.status(400).json({
-            message: `Missing required field(s): ${missingFields.join(', ')}`,
-        });
-    }
 
     try{
         // Validate required fields
@@ -66,21 +57,31 @@ router.post('/:userId/symptoms/create', async (request, response) : Promise<any>
 // UPDATE a symptom by ID
 router.put('/:userId/symptoms/:id', async (request, response): Promise<any> => {
     const { userId, id } = request.params;
-    const { name, duration, severity, notes } = request.body;
-    try {
-        const updated = await Symptom.findOneAndUpdate(
-            { _id: id, userId},
-            { name, duration, severity, notes },
-            { new: true, runValidators: true }
-        );
+    const updateFields = request.body;
 
-        if (!updated) return response.status(404).json({ message: 'Symptom not found' });
-        response.status(200).json(updated);
+  try {
+    // Validate: are the IDs valid ObjectIds?
+    if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(id)) {
+      return response.status(400).json({ message: 'Invalid user ID or symptom ID format.' });
+    }
 
-    } catch (error) {
-        handleError(response, 400, 'Failed to update symptom', error);
+    // Find and update
+    const updatedSymptom = await Symptom.findOneAndUpdate(
+      { _id: id, userId }, // Ensure symptom belongs to this user
+      updateFields,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedSymptom) {
+      return response.status(404).json({ message: 'Symptom not found for this user.' });
+    }
+
+    return response.status(200).json(updatedSymptom);
+  } catch (error) {
+    handleError(response, 400, 'Failed to update symptom', error);
   }
 });
+
 
 // DELETE a symptom by ID
 router.delete('/:userId/symptoms/:id', async (request, response): Promise<any> => {
