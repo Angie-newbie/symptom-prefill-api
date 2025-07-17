@@ -4,11 +4,10 @@ WORKDIR /app
 
 
 # Copy package files
-COPY package*.json ./
+COPY package.json package-lock.json package*.json LICENSE README.md ./
+COPY src ./src/
 
 RUN npm install
-
-COPY . .
 
 # Set environment variable (development by default)
 ENV NODE_ENV=development
