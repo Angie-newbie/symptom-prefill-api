@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM node:18-alpine
 
 WORKDIR /app
 
@@ -10,6 +10,11 @@ RUN npm install
 
 COPY . .
 
+# Set environment variable (development by default)
+ENV NODE_ENV=development
+
+# Expose port
+EXPOSE 3000
 
 
 CMD ["npm", "run", "dev"]
