@@ -6,7 +6,7 @@ WORKDIR /app
 
 
 # Copy package files
-COPY package.json package-lock.json package*.json LICENSE README.md ./
+COPY package.json package-lock.json package*.json tsconfig.json LICENSE README.md ./
 COPY src ./src/
 
 RUN npm install
