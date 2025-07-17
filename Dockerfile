@@ -1,7 +1,15 @@
-FROM node: alpine
+FROM alpine:latest
 
-COPY . .
+WORKDIR /app
+
+
+# Copy package files
+COPY package*.json ./
 
 RUN npm install
 
-CMD ["npm", "run", "start"]
+COPY . .
+
+
+
+CMD ["npm", "run", "dev"]
