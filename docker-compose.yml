@@ -1,11 +1,19 @@
 services:
   api:
     build: .
+    ports:
+      - "3000:3000"
     env_file: .env
+    depends_on:
+      - mongo
+    command: npm run dev
 
-    environment:
-      - DATABASE_URL=mongodb://mongo:27010/symptoms
-      - PORT = 3000
+    # environment:
+    #   - DATABASE_URL=mongodb://mongo:27010/symptoms
+    #   - PORT = 3000
   mongo:
       image: mongo
+      restart: always
+      ports:
+      - "27017:27017"
 
