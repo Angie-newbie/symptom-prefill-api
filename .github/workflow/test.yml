@@ -1,0 +1,46 @@
+name: Node.js CI with MongoDB
+
+# When we push to our default branch,
+# run this workflow
+on:
+  push:
+    branches:
+      - master
+      - main
+  
+  pull_request:
+    branches:
+      - master
+      - main
+
+# Define the things to do within the workflow
+jobs:
+
+  # Run a job on Linux
+  build-and-test:
+    runs-on: ubuntu-latest
+    # Steps are the specific things to do!
+    steps:
+      - run: echo "Hello, world!"
+
+      - uses: actions/checkout@v4
+
+      - run: |
+          ls -a .
+          echo "All files of pwd listed above, enjoy!"
+
+  # Run a job on Windows
+  oursecondjob:
+    runs-on: windows-latest
+    # Steps are the specific things to do!
+    steps:
+      - name: Hello world command
+        run: echo "Hello, world!"
+
+      - name: Get a copy of the repo files
+        uses: actions/checkout@v4
+
+      - name: Run multiple commands 
+        run: |
+          ls .
+          echo "All files of pwd listed above, enjoy!"
