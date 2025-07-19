@@ -1,7 +1,8 @@
 name: symptom-prefill-api
 services:
   api:
-    image: symptomprefillapi:latest-${NODE_ENV}
+    # image: symptomprefillapi:latest-${NODE_ENV}
+    image: symptom-prefill-api:${VERSION:-latest}-${NODE_ENV:-development}-${GIT_SHA:-unknown}
     build:
       context: .
       args:
