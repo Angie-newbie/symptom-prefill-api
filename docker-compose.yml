@@ -6,9 +6,9 @@ services:
     build:
       context: .
       args:
-        - PORT=${PORT}
+        - PORT=${PORT:-3000}
     ports:
-      - "${PORT}:${PORT}"
+      - "${PORT:-3000}:${PORT:-3000}"
     environment:
       - NODE_ENV=${NODE_ENV}
       - JWT_SECRET=${JWT_SECRET}
