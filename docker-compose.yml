@@ -1,13 +1,20 @@
-name: symptomprefillapi
+name: symptom-prefill-api
 services:
   api:
     image: symptomprefillapi:latest-${NODE_ENV}
-    build: .
+    build:
+      context: .
+      args:
+        - PORT=3000
     ports:
       - "3000:3000"
 
     # Loads environment variables from .env 
     env_file: .env
+
+    environment:
+      - DATABASE_URL=mongodb://mongo:27017/symptoms-${NODE_ENV:-defaultenvironment}
+      - PORT=${PORT:-3000}
 
     # Ensure MongoDB starts before the API
     depends_on: [mongo]
