@@ -1,6 +1,7 @@
+name: symptomprefillapi
 services:
   api:
-    image: symptomprefillapi:latest
+    image: symptomprefillapi:latest-${NODE_ENV}
     build: .
     ports:
       - "3000:3000"
