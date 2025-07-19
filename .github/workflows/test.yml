@@ -52,8 +52,11 @@ jobs:
 
       - name: Install docker-compose
         run: |
-          sudo apt-get update
+          sudo apt-get update --fix-missing
           sudo apt-get install -y docker-compose-plugin
+
+      - name: Check docker-compose version
+        run: docker compose version
 
       - name: Run docker-compose with secrets
 
