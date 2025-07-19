@@ -6,25 +6,29 @@ A Node.js + TypeScript backend for collecting and managing structured symptom an
 
 ## 📌 Features
 
-- Symptom and medicine CRUD endpoints  
-- Separate logic for patient submissions and doctor updates  
+- RESTful CRUD endpoints for symptoms and medicines  
 - Secure user registration and JWT login  
 - Password hashing with bcrypt  
 - Input validation and error handling  
-- Designed for integration with frontend intake forms or telehealth platforms  
+- CI/CD with GitHub Actions  
+- Docker & Docker Compose support  
+- Test suite using Jest + Supertest  
+- Environment variables managed with `.env` and GitHub Secrets  
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Category         | Technology            |
-|------------------|------------------------|
-| Backend          | Node.js, Express       |
-| Language         | TypeScript             |
-| Database         | MongoDB + Mongoose     |
-| Auth & Security  | JWT, bcrypt            |
-| Dev Tools        | nodemon, dotenv        |
-| Styling          | Follows Airbnb-style JS/TS conventions |
+| Category         | Technology                  |
+|------------------|-----------------------------|
+| Backend          | Node.js, Express            |
+| Language         | TypeScript                  |
+| Database         | MongoDB + Mongoose          |
+| Auth & Security  | JWT, bcrypt                 |
+| Dev Tools        | ts-node, nodemon, dotenv    |
+| Testing          | Jest, Supertest             |
+| CI/CD            | GitHub Actions, Docker      |
+| Style Guide      | Airbnb-style JS/TS linting  |
 
 ---
 
@@ -68,6 +72,35 @@ JWT_SECRET=SymptomsPreFillSecretKey
 ### 4. Run the server
 ```
 npm run dev
+```
+
+### 5. Run Tests
+```
+npm run build
+npm test 
+```
+
+## 🐳 Docker Support
+
+### 1. Build & Run Locally
+
+```
+docker-compose up --build
+```
+
+### 2. Make sure .env contains:
+
+```
+PORT=3000
+JWT_SECRET=yourSecret
+DATABASE_URL=mongodb://mongo:27017/symptoms-test
+NODE_ENV=development
+```
+
+### 3. CI/CD Tagging Convention
+Container images are named using:
+```
+Container images are named using:
 ```
 
 # 📘 API Overview
@@ -131,11 +164,11 @@ Authorization: Bearer <your_jwt_token>
 
 ## Security & Ethics Considerations
 
--  JWT authentication to protect sensitive endpoints  
--  bcrypt password hashing  
--  Field validation to prevent incomplete or misleading records  
--  Patient safety first: Data is meant to assist, not replace, clinical judgment  
--  Planned improvements: CORS policy, role-based access, multilingual support
+- JWT authentication for protected routes
+- Passwords hashed with bcrypt
+- Request input validated before DB insertion
+- No hardcoded credentials — secrets are injected via CI/CD
+- Ethical usage: intended for clinical support, not diagnosis replacement
 
 ---
 
