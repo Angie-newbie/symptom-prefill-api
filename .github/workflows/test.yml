@@ -50,6 +50,11 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+      - name: Install docker-compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose-plugin
+
       - name: Run docker-compose with secrets
 
         # the secrets come from the environment variables set in the CI/CD environment
@@ -57,7 +62,7 @@ jobs:
           NODE_ENV: test
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           DATABASE_URL: mongodb://localhost:27017/symptoms-test
-          
+
         run: docker-compose up -d
 
       - run: npm test
