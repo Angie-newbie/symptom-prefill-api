@@ -5,10 +5,13 @@ WORKDIR /app
 
 # Copy package files
 COPY package.json package-lock.json package*.json tsconfig.json LICENSE README.md ./
-COPY src ./src/
 
 RUN npm install
 
+COPY src ./src/
+
+# Build the TypeScript code into JavaScript
+RUN npm run build
 
 # Build-time argument for DATABASE_URL
 ARG DATABASE_URL=mongodb://localhost:27017/symptoms
@@ -16,7 +19,6 @@ ARG DATABASE_URL=mongodb://localhost:27017/symptoms
 # Set environment variable (development by default)
 # ENV NODE_ENV=development
 ENV DATABASE_URL=${DATABASE_URL}
-
 
 # Build-time argument for PORT (fallback to 3000)
 ARG PORT=3000
@@ -33,4 +35,5 @@ EXPOSE ${PORT}
 HEALTHCHECK --interval=10s --timeout=5s --start-period=10s --retries=3 \
   CMD wget --spider --quiet http://localhost:3000/health || exit 1
 
-CMD ["npm", "run", "dev"]
+# Start the app using the compiled JavaScript
+CMD ["node", "dist/index.js"]
