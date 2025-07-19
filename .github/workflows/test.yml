@@ -59,7 +59,7 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
 
       - name: Check docker-compose version
-        run: docker compose version
+        run: docker compose --version
 
       - name: Run docker-compose with secrets
 
@@ -71,6 +71,13 @@ jobs:
 
         run: docker-compose up -d
 
-      - run: npm test
+      # to see docker-compose logs
+      - name: Show docker-compose logs
+        run: sudo docker-compose logs
+
+      - name: Run tests
+        run: npm test
         env:
           NODE_ENV: test
+
+
