@@ -15,14 +15,15 @@ services:
     # command: npm run dev
 
   mongo:
-      image: mongo
+    image: mongo
 
-      # Auto-restarts container on crash or Docker reboot
-      restart: always
-      ports:
+    # Auto-restarts container on crash or Docker reboot
+    restart: always
+    ports:
       - "27017:27017"
-      volumes:
+    volumes:
       - mongo-data:/data/db
+
 volumes:
   mongo-data:
     driver: local
