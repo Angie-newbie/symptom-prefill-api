@@ -57,6 +57,8 @@ jobs:
           NODE_ENV: test
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           DATABASE_URL: mongodb://localhost:27017/symptoms-test
+          
+        run: docker-compose up -d
 
       - run: npm test
         env:
