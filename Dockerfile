@@ -1,7 +1,7 @@
 FROM node:18-alpine
 
 
-# Set working directory
+# Inside the container, create and use a folder called /app as the working directory
 WORKDIR /app
 
 

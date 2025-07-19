@@ -1,19 +1,29 @@
 services:
   api:
+    image: symptomprefillapi:latest
     build: .
     ports:
       - "3000:3000"
-    env_file: .env
-    depends_on:
-      - mongo
-    command: npm run dev
 
-    # environment:
-    #   - DATABASE_URL=mongodb://mongo:27010/symptoms
-    #   - PORT = 3000
+    # Loads environment variables from .env 
+    env_file: .env
+
+    # Ensure MongoDB starts before the API
+    depends_on: [mongo]
+
+    # #  Overrides the Dockerfile CMD, runs npm run dev to start the server
+    # command: npm run dev
+
   mongo:
       image: mongo
+
+      # Auto-restarts container on crash or Docker reboot
       restart: always
       ports:
       - "27017:27017"
+      volumes:
+      - mongo-data:/data/db
+volumes:
+  mongo-data:
+    driver: local
 
