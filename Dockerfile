@@ -4,7 +4,6 @@ FROM node:18-alpine
 # Inside the container, create and use a folder called /app as the working directory
 WORKDIR /app
 
-
 # Copy package files
 COPY package.json package-lock.json package*.json tsconfig.json LICENSE README.md ./
 COPY src ./src/
