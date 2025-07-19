@@ -50,19 +50,5 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm test
-
-  # Run a job on Windows
-  oursecondjob:
-    runs-on: windows-latest
-    # Steps are the specific things to do!
-    steps:
-      - name: Hello world command
-        run: echo "Hello, world!"
-
-      - name: Get a copy of the repo files
-        uses: actions/checkout@v4
-
-      - name: Run multiple commands 
-        run: |
-          ls .
-          echo "All files of pwd listed above, enjoy!"
+        env:
+        NODE_ENV: test
