@@ -17,17 +17,39 @@ on:
 jobs:
 
   # Run a job on Linux
-  build-and-test:
+  build-and-test-on-linux:
     runs-on: ubuntu-latest
-    # Steps are the specific things to do!
-    steps:
-      - run: echo "Hello, world!"
 
+    # sets up a MongoDB Docker container that runs the test jobs
+    services:
+      mongo:
+        image: mongo:6.0
+
+        # connect to the database
+        ports:
+          - 27017:27017
+
+        # health check to make sure MongoDB is up before running tests
+        options: >-
+          --health-cmd="mongosh --eval 'db.runCommand({ ping: 1 })'" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
+
+    # CI steps
+    steps:
+      # pulls the code into CI environment
       - uses: actions/checkout@v4
 
-      - run: |
-          ls -a .
-          echo "All files of pwd listed above, enjoy!"
+      # install Node.js so can use npm and TypeScript
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      # use package-lock,json to install dependencies (npm ci use package-lock strickly)
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
 
   # Run a job on Windows
   oursecondjob:
