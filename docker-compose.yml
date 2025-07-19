@@ -14,7 +14,8 @@ services:
     env_file: .env
 
     environment:
-      - DATABASE_URL=mongodb://mongo:27017/symptoms-${NODE_ENV:-defaultenvironment}
+      - JWT_SECRET=${JWT_SECRET}
+      - DATABASE_URL=${DATABASE_URL}
       - PORT=${PORT:-3000}
 
     # Ensure MongoDB starts before the API

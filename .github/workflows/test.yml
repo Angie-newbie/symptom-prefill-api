@@ -49,6 +49,15 @@ jobs:
       # use package-lock,json to install dependencies (npm ci use package-lock strickly)
       - run: npm ci
       - run: npm run build
+
+      - name: Run docker-compose with secrets
+
+        # the secrets come from the environment variables set in the CI/CD environment
+        env:
+          NODE_ENV: test
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          DATABASE_URL: mongodb://localhost:27017/symptoms-test
+
       - run: npm test
         env:
           NODE_ENV: test
