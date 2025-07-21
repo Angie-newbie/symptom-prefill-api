@@ -26,7 +26,7 @@ jobs:
       packages: write
       contents: read
     steps:
-      - uses: actions/checkout@4
+      - uses: actions/checkout@v4
       # Uppercase names in repos or GitHub usernames breaks things sometimes. 
       # So, make a lowercase (LC) copy of some key data.
       - name: Sanitise metadata for Docker container publishing
