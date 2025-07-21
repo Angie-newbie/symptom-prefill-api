@@ -1,0 +1,88 @@
+name: Render CD
+
+# Every time the repo updates, make a new Docker image.
+on:
+  push:
+      workflow_dispatch: 
+# You may want to do this per day instead though:
+# on:
+#  schedule:
+#    - cron: $cron-daily
+
+jobs:
+  publish:
+
+    # Set the OS that this workflow runs on.
+    runs-on: ubuntu-latest
+
+    # Initialise environment variables to be edited during the workflow. 
+    env: 
+      OWNER_LC: ""
+      REPO_LC: ""
+
+      # Packages (Docker images) must be writable. 
+      # Contents (repo files & folders) must be readable.
+    permissions: 
+      packages: write
+      contents: read
+    steps:
+      # Uppercase names in repos or GitHub usernames breaks things sometimes. 
+      # So, make a lowercase (LC) copy of some key data.
+      - name: Sanitise metadata for Docker container publishing
+        run: |
+          echo "OWNER_LC=${OWNER,,}" >>${GITHUB_ENV}
+          echo "REPO_LC=${REPO,,}" >>${GITHUB_ENV}
+        env:
+          OWNER: '${{ github.repository_owner }}'
+          REPO: '${{ github.repository }}'
+
+      # If we wanna publish to Docker Hub, use this.
+      #   - name: Login to Docker Hub
+      #     uses: docker/login-action@v3
+      #     with:
+      #       username: ${{ vars.DOCKERHUB_USERNAME }}
+      #       password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # If we wanna publish to the GitHub Container Registry, 
+      # an alternative to Docker Hub, we can use this.
+      
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          # Specifying a custom registry means that we do not have to use Docker Hub.
+          # Pricing, storage quotas, and behaviours with private repositories
+          # can be different in different container registries!
+          registry: ghcr.io
+          # github.repository_owner is automatically made by GitHub, it's repository metadata.
+          username: ${{ github.repository_owner }}
+          # GITHUB_TOKEN is automatically made by GitHub.
+          password: ${{ secrets.GITHUB_TOKEN }} 
+
+        # Beneficial for container image building:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        
+        # Required for container image building:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+        # Required for container image publishing:
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/amd64,linux/arm64
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ env.REPO_LC }}:latest
+
+        #
+      - name: Deploy to Render
+        uses: gh-actions-workflows/deploy-docker-render@v1.1
+        with:
+          deploy-hook: ${{ secrets.RENDER_DEPLOY_HOOK }}
+          image-url: ghcr.io/${{ env.REPO_LC }}:latest
+          render-api-key: ${{ secrets.RENDER_API_KEY }}
+          wait-for-deployment: true
+      
