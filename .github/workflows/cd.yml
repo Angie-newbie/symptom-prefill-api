@@ -83,7 +83,7 @@ jobs:
         uses: gh-actions-workflows/deploy-docker-render@v1.1
         with:
           deploy-hook: ${{ secrets.RENDER_DEPLOY_HOOK }}
-          image-url: ${{ env.REPO_LC }}:latest
+          image-url: angie-newbie/symptom-prefill-api:latest
           render-api-key: ${{ secrets.RENDER_API_KEY }}
           wait-for-deployment: true
           docker-repo-prefix: ghcr.io/
