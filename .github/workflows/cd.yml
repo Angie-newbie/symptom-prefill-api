@@ -86,7 +86,7 @@ jobs:
           image-url: angie-newbie/symptom-prefill-api:latest
           render-api-key: ${{ secrets.RENDER_API_KEY }}
           wait-for-deployment: true
-          docker-repo-prefix: ghcr.io/
+          docker-repo-prefix: ghcr.io
 
           
       
