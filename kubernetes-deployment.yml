@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: symptom-docker-cluster
+  labels:
+    app: symptom-docker-cluster
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: symptom-docker-cluster
+  template:
+    metadata:
+      labels:
+        app: symptom-docker-cluster
+    spec:
+      containers:
+      - name: symptom-docker-cluster
+        image: ghcr.io/angie-newbie/symptom-prefill-api:latest
+        ports:
+          - containerPort: 5000
+        env:
+          - name: MONGO_URI
+            value: "mongodb://mongo:27017/symptoms"
+
+
+  
