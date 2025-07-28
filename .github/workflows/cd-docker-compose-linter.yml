@@ -21,6 +21,7 @@ jobs:
           path: ./Docker-compose.yml
           recursive: true
           max-warnings: 1000
+          fix: true
       
       - name: Log the changelog to Discord
         if: always()
@@ -28,4 +29,4 @@ jobs:
         with:
           webhook-url: ${{ secrets.DC_LINTER_DISCORD_WEBHOOK_URL }}
           # content: ${{ steps.docker-compose-linter.outputs.GITHUB }}
-          content: echo "$GITHUB_STEP_SUMMARY"
+          filename: ./Docker-compose.yml
