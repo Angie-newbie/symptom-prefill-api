@@ -15,7 +15,16 @@ jobs:
       - run: ls
 
 
-      - uses: docker-compose-linter/dclint-github-action@v1.4.1
+      - id: docker-compose-linter
+        uses: docker-compose-linter/dclint-github-action@v1.4.1
         with:
           path: ./Docker-compose.yml
           recursive: true
+          max-warnings: 1000
+      
+      - name: Log the changelog to Discord
+        uses: tsickert/discord-webhook@v7.0.0
+        with:
+          webhook-url: ${{ secrets.DC_LINTER_DISCORD_WEBHOOK_URL }}
+          # content: ${{ steps.docker-compose-linter.outputs.GITHUB }}
+          content: $GITHUB_STEP_SUMMARY

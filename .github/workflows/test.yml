@@ -3,12 +3,12 @@ name: Node.js CI with MongoDB
 # When we push to our default branch,
 # run this workflow
 on:
-  # push:
+  push:
     branches:
       - master
       - main
   
-  # pull_request:
+  pull_request:
     branches:
       - master
       - main
