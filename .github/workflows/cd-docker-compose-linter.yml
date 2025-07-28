@@ -1,7 +1,16 @@
 name: Dcoker Compose Linter
 
 on:
-  workflow_dispatch:
+  # workflow_dispatch:
+  pull_request:
+    types:
+        - opened
+        - edited
+        - reopened
+    branches:
+      - 'main'
+    paths:
+      - 'Docker-compose.yml'
 
 jobs:
   linter-job:
@@ -23,10 +32,16 @@ jobs:
           max-warnings: 1000
           fix: true
       
-      - name: Log the changelog to Discord
-        if: always()
-        uses: tsickert/discord-webhook@v7.0.0
+      # - name: Log the changelog to Discord
+      #   if: always()
+      #   uses: tsickert/discord-webhook@v7.0.0
+      #   with:
+      #     webhook-url: ${{ secrets.DC_LINTER_DISCORD_WEBHOOK_URL }}
+      #     # content: ${{ steps.docker-compose-linter.outputs.GITHUB }}
+      #     filename: ./Docker-compose.yml
+      
+      - name: PR comment with file
+        uses: thollander/actions-comment-pull-request@v3
         with:
-          webhook-url: ${{ secrets.DC_LINTER_DISCORD_WEBHOOK_URL }}
-          # content: ${{ steps.docker-compose-linter.outputs.GITHUB }}
-          filename: ./Docker-compose.yml
+          file-path: ./Docker-compose.yml
+          message: "Suggested fixes for the compose file are here"
