@@ -33,6 +33,7 @@ jobs:
         with:
           reporter: github-pr-review 
           dclint_flags:  ./Docker-compose.yml
+          filter_mode: file
 
       # - id: docker-compose-linter
       #   uses: docker-compose-linter/dclint-github-action@v1.4.1
