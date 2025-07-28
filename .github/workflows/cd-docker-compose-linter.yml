@@ -23,6 +23,7 @@ jobs:
           max-warnings: 1000
       
       - name: Log the changelog to Discord
+        if: always()
         uses: tsickert/discord-webhook@v7.0.0
         with:
           webhook-url: ${{ secrets.DC_LINTER_DISCORD_WEBHOOK_URL }}
