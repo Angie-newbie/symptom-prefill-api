@@ -12,6 +12,9 @@ on:
       - 'main'
     paths:
       - 'Docker-compose.yml'
+      
+permissions: 
+   pull-requests: write
 
 jobs:
   linter-job:
