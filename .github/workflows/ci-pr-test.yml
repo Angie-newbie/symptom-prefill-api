@@ -19,6 +19,9 @@ on:
 
 permissions: 
    pull-requests: write
+   contents: read
+   actions: read
+   checks: write
 
 jobs:
   test-runner-job:
